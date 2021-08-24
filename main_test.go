@@ -113,3 +113,128 @@ func TestCellRules(t *testing.T) {
 		assert.False(t, cell.Alive)
 	})
 }
+
+func TestGrid(t *testing.T) {
+
+	t.Run("Grids have a height and width", func(t *testing.T) {
+
+		grid := NewGrid(3, 3)
+		assert.Equal(t, 3, grid.X)
+		assert.Equal(t, 3, grid.Y)
+
+	})
+
+	t.Run("Grid is full of cells", func(t *testing.T) {
+	
+		grid := NewGrid(3, 3)
+		assert.Equal(t, 3, len(grid.Columns[0]))
+		assert.Equal(t, 3, len(grid.Columns[1]))
+		assert.Equal(t, 3, len(grid.Columns[2]))
+		
+		assert.IsType(t, []cell{}, grid.Columns[0])
+		assert.IsType(t, []cell{}, grid.Columns[1])
+		assert.IsType(t, []cell{}, grid.Columns[2])
+		assert.IsType(t, [][]cell{}, grid.Columns)
+
+	})
+
+	t.Run("Grid can check living neighbours for X and Y", func(t *testing.T) {
+
+		grid := NewGrid(3, 3)
+		actual := grid.checkCell(1,1)
+		assert.Equal(t, 8, actual)
+
+	})
+
+	t.Run("Grid can check living neighbours for cells on the edge", func(t *testing.T) {
+
+		grid := NewGrid(3, 3)
+		actual := grid.checkCell(0,0)
+		assert.Equal(t, 8, actual)
+
+	})
+
+	t.Run("Grid detects dead cells", func(t *testing.T) {
+
+		grid := NewGrid(3, 3)
+		grid.Columns[0][1].Alive = false
+		actual := grid.checkCell(1,1)
+
+		assert.Equal(t, 7, actual)
+
+	})
+
+	t.Run("Grid detects all neighbours are dead, oh no", func(t *testing.T) {
+
+		grid := NewGrid(3, 3)
+		grid.Columns[0][0].Alive = false
+		grid.Columns[0][1].Alive = false
+		grid.Columns[0][2].Alive = false
+
+		grid.Columns[1][0].Alive = false
+		grid.Columns[1][2].Alive = false
+		grid.Columns[1][0].Alive = false
+
+		grid.Columns[2][0].Alive = false
+		grid.Columns[2][1].Alive = false
+		grid.Columns[2][2].Alive = false
+
+		actual := grid.checkCell(1,1)
+
+		assert.Equal(t, 0, actual)
+
+	})
+}
+
+func TestGridUpdate(t *testing.T) {
+	t.Run("Grid updates every cell of the board", func(t *testing.T) {
+
+		expectedGrid := NewGrid(4,4)
+		expectedGrid.Columns[0][0].Alive = false
+		expectedGrid.Columns[0][1].Alive = false
+		expectedGrid.Columns[0][2].Alive = false
+		expectedGrid.Columns[0][3].Alive = false
+
+		expectedGrid.Columns[1][0].Alive = false
+		expectedGrid.Columns[1][1].Alive = true
+		expectedGrid.Columns[1][2].Alive = true
+		expectedGrid.Columns[1][3].Alive = false
+
+		expectedGrid.Columns[2][0].Alive = false
+		expectedGrid.Columns[2][1].Alive = true
+		expectedGrid.Columns[2][2].Alive = true
+		expectedGrid.Columns[2][3].Alive = false
+
+		expectedGrid.Columns[3][0].Alive = false
+		expectedGrid.Columns[3][1].Alive = false
+		expectedGrid.Columns[3][2].Alive = false
+		expectedGrid.Columns[3][3].Alive = false
+
+		grid := NewGrid(4,4)
+		// grid.Columns[0][0].Alive = false
+		// grid.Columns[0][1].Alive = false
+		// grid.Columns[0][2].Alive = false
+		// grid.Columns[0][3].Alive = false
+
+		// grid.Columns[1][0].Alive = false
+		// grid.Columns[1][1].Alive = true
+		// grid.Columns[1][2].Alive = true
+		// grid.Columns[1][3].Alive = false
+
+		// grid.Columns[2][0].Alive = false
+		// grid.Columns[2][1].Alive = true
+		// grid.Columns[2][2].Alive = true
+		// grid.Columns[2][3].Alive = false
+
+		// grid.Columns[3][0].Alive = false
+		// grid.Columns[3][1].Alive = false
+		// grid.Columns[3][2].Alive = false
+		// grid.Columns[3][3].Alive = false
+
+		grid.Update()
+
+		assert.Equal(t, expectedGrid, grid)
+
+	})
+
+}
