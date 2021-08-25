@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type cell struct {
 	Alive bool
@@ -122,28 +125,34 @@ func (g *grid) checkCell(x, y int) (livingNeighbours int) {
 	return 
 }
 
+type cellUpdate struct {
+	X int
+	Y int
+	LivingNeighbours int
+}
+
 func (g *grid) Update() {
-	var newGrid [][]cell
-	for _, col := range g.Columns {
-		row := make([]cell, 0)
-		for _, thisCell := range col {
-			row = append(row,  cell{Alive: thisCell.Alive})
-		}
-		newGrid = append(newGrid, row)
-	}
-	PrintGrid(newGrid)
-	fmt.Println()
 
-	for y, c := range g.Columns {
-		
+	channel := make(chan cellUpdate, g.X * g.Y)
+	var wg sync.WaitGroup
+
+	for y, c := range g.Columns {	
 		for x := range c {
-			livingNeighbours := g.checkCell(x, y)
-			newGrid[x][y].Update(livingNeighbours)
-
+			wg.Add(1)
+			go func(x, y int, g *grid, channel chan cellUpdate) {
+				defer wg.Done()
+				livingNeighbours := g.checkCell(x, y)
+				channel <- cellUpdate{X: x, Y: y, LivingNeighbours: livingNeighbours}
+			}(x, y, g, channel)
 		}
 	}
-	PrintGrid(newGrid)
-	g.Columns = newGrid
+
+	wg.Wait()
+	close(channel)
+
+	for cellUpdate := range channel {
+		g.Columns[cellUpdate.Y][cellUpdate.X].Update(cellUpdate.LivingNeighbours)
+	}
 }
 
 func (g *grid) printMinesweeperGrid() {
