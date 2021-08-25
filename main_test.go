@@ -189,48 +189,91 @@ func TestGrid(t *testing.T) {
 func TestGridUpdate(t *testing.T) {
 	t.Run("Grid updates every cell of the board", func(t *testing.T) {
 
-		expectedGrid := NewGrid(4,4)
+		expectedGrid := NewGrid(6,6)
 		expectedGrid.Columns[0][0].Alive = false
 		expectedGrid.Columns[0][1].Alive = false
 		expectedGrid.Columns[0][2].Alive = false
 		expectedGrid.Columns[0][3].Alive = false
+		expectedGrid.Columns[0][4].Alive = false
+		expectedGrid.Columns[0][5].Alive = false
 
 		expectedGrid.Columns[1][0].Alive = false
 		expectedGrid.Columns[1][1].Alive = true
 		expectedGrid.Columns[1][2].Alive = true
 		expectedGrid.Columns[1][3].Alive = false
+		expectedGrid.Columns[1][4].Alive = false
+		expectedGrid.Columns[1][5].Alive = false
 
 		expectedGrid.Columns[2][0].Alive = false
 		expectedGrid.Columns[2][1].Alive = true
-		expectedGrid.Columns[2][2].Alive = true
+		expectedGrid.Columns[2][2].Alive = false
 		expectedGrid.Columns[2][3].Alive = false
+		expectedGrid.Columns[2][4].Alive = false
+		expectedGrid.Columns[2][5].Alive = false
 
 		expectedGrid.Columns[3][0].Alive = false
 		expectedGrid.Columns[3][1].Alive = false
 		expectedGrid.Columns[3][2].Alive = false
 		expectedGrid.Columns[3][3].Alive = false
+		expectedGrid.Columns[3][4].Alive = true
+		expectedGrid.Columns[3][5].Alive = false
 
-		grid := NewGrid(4,4)
-		// grid.Columns[0][0].Alive = false
-		// grid.Columns[0][1].Alive = false
-		// grid.Columns[0][2].Alive = false
-		// grid.Columns[0][3].Alive = false
+		expectedGrid.Columns[4][0].Alive = false
+		expectedGrid.Columns[4][1].Alive = false
+		expectedGrid.Columns[4][2].Alive = false
+		expectedGrid.Columns[4][3].Alive = true
+		expectedGrid.Columns[4][4].Alive = true
+		expectedGrid.Columns[4][5].Alive = false
+		
+		expectedGrid.Columns[5][0].Alive = false
+		expectedGrid.Columns[5][1].Alive = false
+		expectedGrid.Columns[5][2].Alive = false
+		expectedGrid.Columns[5][3].Alive = false
+		expectedGrid.Columns[5][4].Alive = false
+		expectedGrid.Columns[5][5].Alive = false
 
-		// grid.Columns[1][0].Alive = false
-		// grid.Columns[1][1].Alive = true
-		// grid.Columns[1][2].Alive = true
-		// grid.Columns[1][3].Alive = false
+		grid := NewGrid(6,6)
+		grid.Columns[0][0].Alive = false
+		grid.Columns[0][1].Alive = false
+		grid.Columns[0][2].Alive = false
+		grid.Columns[0][3].Alive = false
+		grid.Columns[0][4].Alive = false
+		grid.Columns[0][5].Alive = false
 
-		// grid.Columns[2][0].Alive = false
-		// grid.Columns[2][1].Alive = true
-		// grid.Columns[2][2].Alive = true
-		// grid.Columns[2][3].Alive = false
+		grid.Columns[1][0].Alive = false
+		grid.Columns[1][1].Alive = true
+		grid.Columns[1][2].Alive = true
+		grid.Columns[1][3].Alive = false
+		grid.Columns[1][4].Alive = false
+		grid.Columns[1][5].Alive = false
 
-		// grid.Columns[3][0].Alive = false
-		// grid.Columns[3][1].Alive = false
-		// grid.Columns[3][2].Alive = false
-		// grid.Columns[3][3].Alive = false
+		grid.Columns[2][0].Alive = false
+		grid.Columns[2][1].Alive = true
+		grid.Columns[2][2].Alive = true
+		grid.Columns[2][3].Alive = false
+		grid.Columns[2][4].Alive = false
+		grid.Columns[2][5].Alive = false
 
+		grid.Columns[3][0].Alive = false
+		grid.Columns[3][1].Alive = false
+		grid.Columns[3][2].Alive = false
+		grid.Columns[3][3].Alive = true
+		grid.Columns[3][4].Alive = true
+		grid.Columns[3][5].Alive = false
+
+		grid.Columns[4][0].Alive = false
+		grid.Columns[4][1].Alive = false
+		grid.Columns[4][2].Alive = false
+		grid.Columns[4][3].Alive = true
+		grid.Columns[4][4].Alive = true
+		grid.Columns[4][5].Alive = false
+		
+		grid.Columns[5][0].Alive = false
+		grid.Columns[5][1].Alive = false
+		grid.Columns[5][2].Alive = false
+		grid.Columns[5][3].Alive = false
+		grid.Columns[5][4].Alive = false
+		grid.Columns[5][5].Alive = false
 		grid.Update()
 
 		assert.Equal(t, expectedGrid, grid)
